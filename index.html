@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="Avis Eurocash"/>
+<title>Avis Google — Eurocash Confiseur</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --bg:#F7F6F2;--surface:#FFFFFF;--border:#E5E3DC;--text:#1A1A18;--muted:#7A7870;
+  --green-bg:#EAF3DE;--green-txt:#3B6D11;
+  --blue-bg:#E6F1FB;--blue-txt:#185FA5;
+  --orange-bg:#FAEEDA;--orange-txt:#854F0B;
+  --pink-bg:#F4C0D1;--pink-txt:#993556;
+  --red-bg:#FCEBEB;--red-txt:#A32D2D;
+  --radius:10px;--radius-lg:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-title{font-size:16px;font-weight:600}
+.topbar-sub{font-size:12px;color:var(--muted);margin-top:1px}
+.logo{width:34px;height:34px;background:var(--text);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600}
+.tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:1;min-width:75px;padding:12px 6px;font-size:13px;font-weight:500;color:var(--muted);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;font-family:'DM Sans',sans-serif}
+.tab.active{color:var(--text);border-bottom-color:var(--text)}
+.page{display:none;padding:16px}.page.active{display:block}
+.section-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:10px}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px;font-weight:500}
+input[type=text],input[type=url]{width:100%;height:42px;border:1px solid var(--border);border-radius:var(--radius);padding:0 12px;font-size:14px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;margin-bottom:10px}
+input:focus{border-color:var(--text);background:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;height:42px;padding:0 18px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer}
+.btn-primary{background:var(--text);color:#fff;border-color:var(--text);width:100%}
+.btn-sm{height:30px;padding:0 12px;font-size:12px;border-radius:8px}
+.btn-danger{color:var(--red-txt);border-color:#F09595}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px}
+.stat-lbl{font-size:11px;color:var(--muted);margin-bottom:2px}
+.stat-val{font-size:24px;font-weight:600;letter-spacing:-1px}
+.paliers-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.palier-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px}
+.palier-num{font-size:22px;font-weight:700;letter-spacing:-1px}
+.palier-lbl{font-size:11px;color:var(--muted);margin-bottom:4px}
+.palier-reward{font-size:12px;font-weight:500;margin-top:4px}
+.pill{display:inline-block;font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px}
+.pill-green{background:var(--green-bg);color:var(--green-txt)}
+.pill-blue{background:var(--blue-bg);color:var(--blue-txt)}
+.pill-orange{background:var(--orange-bg);color:var(--orange-txt)}
+.pill-pink{background:var(--pink-bg);color:var(--pink-txt)}
+.pill-gray{background:var(--bg);color:var(--muted)}
+.rank-list{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:16px}
+.rank-row{display:grid;grid-template-columns:28px 1fr 50px 60px;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--border)}
+.rank-row:last-child{border-bottom:none}
+.rank-row.head{background:var(--bg);font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding:7px 12px}
+.rnum{font-size:12px;font-weight:600;color:var(--muted);text-align:center}
+.rname{font-size:13px;font-weight:500}
+.rzone{font-size:11px;color:var(--muted)}
+.rval{font-size:13px;font-weight:600;text-align:center}
+.progress-bar{height:4px;background:var(--bg);border-radius:10px;overflow:hidden;margin-top:6px;border:1px solid var(--border)}
+.progress-fill{height:100%;border-radius:10px}
+.log-list{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+.log-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--border)}
+.log-item:last-child{border-bottom:none}
+.log-dot{width:7px;height:7px;border-radius:50%;background:#639922;flex-shrink:0}
+.log-name{font-size:13px;font-weight:500;flex:1}
+.log-time{font-size:11px;color:var(--muted)}
+.commercial-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:8px}
+.ci-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.ci-name{font-size:15px;font-weight:600}
+.ci-zone{font-size:12px;color:var(--muted);margin-top:2px}
+.ci-actions{display:flex;gap:8px;padding-top:10px;border-top:1px solid var(--border);margin-top:10px}
+.qr-wrap{display:flex;align-items:center;gap:12px;background:var(--bg);border-radius:var(--radius);padding:10px 12px;margin-top:10px}
+.qr-info{flex:1;min-width:0}
+.qr-url{font-size:10px;color:var(--muted);word-break:break-all;font-family:'DM Mono',monospace;margin-bottom:4px}
+.empty{text-align:center;padding:32px 16px;color:var(--muted);font-size:14px}
+.alert{background:var(--orange-bg);border:1px solid #EF9F27;border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--orange-txt);margin-bottom:14px;line-height:1.5}
+.success-msg{background:var(--green-bg);border:1px solid #97C459;border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--green-txt);margin-bottom:14px;display:none}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div><div class="topbar-title">Avis Google</div><div class="topbar-sub">Eurocash Confiseur</div></div>
+  <div class="logo">EC</div>
+</div>
+<div class="tabs">
+  <button class="tab active" onclick="showPage('dashboard')">Tableau</button>
+  <button class="tab" onclick="showPage('commerciaux')">Équipe</button>
+  <button class="tab" onclick="showPage('qrcodes')">QR codes</button>
+  <button class="tab" onclick="showPage('config')">Config</button>
+</div>
+
+<div class="page active" id="page-dashboard">
+  <div class="stats-grid" id="dash-stats"></div>
+  <div class="section-label">Paliers de récompenses</div>
+  <div class="paliers-grid">
+    <div class="palier-card"><div class="palier-lbl">Palier 1</div><div class="palier-num">10</div><div class="palier-reward"><span class="pill pill-green">Bon d'achat 20€</span></div></div>
+    <div class="palier-card"><div class="palier-lbl">Palier 2</div><div class="palier-num">20</div><div class="palier-reward"><span class="pill pill-blue">2 cartes cinéma</span></div></div>
+    <div class="palier-card"><div class="palier-lbl">Palier 3</div><div class="palier-num">35</div><div class="palier-reward"><span class="pill pill-orange">Smartbox détente</span></div></div>
+    <div class="palier-card"><div class="palier-lbl">Palier 4</div><div class="palier-num">65</div><div class="palier-reward"><span class="pill pill-pink">Montre connectée</span></div></div>
+  </div>
+  <div class="section-label">Classement</div>
+  <div class="rank-list" id="dash-rank"></div>
+  <div class="section-label" style="margin-top:16px">Derniers scans</div>
+  <div class="log-list" id="dash-log"></div>
+</div>
+
+<div class="page" id="page-commerciaux">
+  <div class="card">
+    <div style="font-size:14px;font-weight:600;margin-bottom:12px">Ajouter un commercial</div>
+    <label>Prénom et nom</label>
+    <input type="text" id="new-name" placeholder="Ex : Sophie Martin"/>
+    <label>Zone</label>
+    <input type="text" id="new-zone" placeholder="Ex : Île-de-France"/>
+    <button class="btn btn-primary" onclick="addCommercial()">+ Ajouter</button>
+  </div>
+  <div style="height:1px;background:var(--border);margin:8px 0 12px"></div>
+  <div class="section-label">Équipe (<span id="team-count">0</span> commerciaux)</div>
+  <div id="commercial-list"></div>
+</div>
+
+<div class="page" id="page-qrcodes">
+  <div class="alert">Chaque QR code est unique. Le client scanne, son scan est enregistré, puis il est redirigé vers Google.</div>
+  <div id="qr-list"></div>
+</div>
+
+<div class="page" id="page-config">
+  <div class="card">
+    <div style="font-size:14px;font-weight:600;margin-bottom:12px">Lien Google My Business</div>
+    <div id="success-config" class="success-msg">Lien enregistré avec succès !</div>
+    <label>Colle ton lien Google ici</label>
+    <input type="url" id="google-url" placeholder="https://g.page/r/XXXXXXXX/review"/>
+    <button class="btn btn-primary" onclick="saveConfig()">Enregistrer</button>
+  </div>
+  <div class="card" style="margin-top:4px">
+    <div style="font-size:14px;font-weight:600;margin-bottom:10px">Comment trouver ton lien ?</div>
+    <div style="font-size:13px;color:var(--muted);line-height:1.8">
+      1. Ouvre <strong style="color:var(--text)">Google</strong> sur ton téléphone<br/>
+      2. Recherche <strong style="color:var(--text)">Eurocash Confiseur</strong><br/>
+      3. Sur ta fiche, appuie sur <strong style="color:var(--text)">"Demander des avis"</strong><br/>
+      4. Copie le lien et colle-le ci-dessus
+    </div>
+  </div>
+  <div class="card" style="margin-top:4px">
+    <div style="font-size:13px;font-weight:600;margin-bottom:6px">Ajouter l'app sur l'écran d'accueil</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.7">
+      iPhone : Safari → bouton partager → "Sur l'écran d'accueil"<br/>
+      Android : Chrome → ⋮ → "Ajouter à l'écran d'accueil"
+    </div>
+  </div>
+</div>
+
+<script>
+const PALIERS=[
+  {min:0,max:9,label:'Aucun',cls:'pill-gray',color:'#B4B2A9',next:10},
+  {min:10,max:19,label:'Palier 1',cls:'pill-green',color:'#639922',next:20},
+  {min:20,max:34,label:'Palier 2',cls:'pill-blue',color:'#378ADD',next:35},
+  {min:35,max:64,label:'Palier 3',cls:'pill-orange',color:'#BA7517',next:65},
+  {min:65,max:999,label:'Palier 4',cls:'pill-pink',color:'#D4537E',next:65},
+];
+function getPalier(s){return PALIERS.find(p=>s>=p.min&&s<=p.max)||PALIERS[0];}
+function getNext(s){return[10,20,35,65].find(x=>x>s)||65;}
+
+let state={googleUrl:'',commerciaux:[],scanLog:[]};
+function save(){try{localStorage.setItem('ec-state',JSON.stringify(state));}catch(e){}}
+function load(){try{const d=localStorage.getItem('ec-state');if(d)state=JSON.parse(d);}catch(e){}}
+load();
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const map={dashboard:0,commerciaux:1,qrcodes:2,config:3};
+  document.querySelectorAll('.tab')[map[id]].classList.add('active');
+  if(id==='dashboard')renderDash();
+  if(id==='commerciaux')renderCommerciaux();
+  if(id==='qrcodes')renderQR();
+  if(id==='config')renderConfig();
+}
+
+function renderDash(){
+  const total=state.commerciaux.reduce((s,c)=>s+c.scans,0);
+  const p1=state.commerciaux.filter(c=>c.scans>=10).length;
+  const avg=state.commerciaux.length?Math.round(total/state.commerciaux.length):0;
+  const best=[...state.commerciaux].sort((a,b)=>b.scans-a.scans)[0];
+  document.getElementById('dash-stats').innerHTML=`
+    <div class="stat"><div class="stat-lbl">Total scans</div><div class="stat-val">${total}</div></div>
+    <div class="stat"><div class="stat-lbl">Palier 1 ou +</div><div class="stat-val">${p1}/${state.commerciaux.length}</div></div>
+    <div class="stat"><div class="stat-lbl">Moyenne</div><div class="stat-val">${avg}</div></div>
+    <div class="stat"><div class="stat-lbl">Leader</div><div class="stat-val" style="font-size:15px">${best?best.name.split(' ')[0]:'—'}</div></div>`;
+  const sorted=[...state.commerciaux].sort((a,b)=>b.scans-a.scans);
+  document.getElementById('dash-rank').innerHTML=sorted.length?
+    `<div class="rank-row head"><div></div><div>Commercial</div><div style="text-align:center">Scans</div><div style="text-align:center">Palier</div></div>`+
+    sorted.map((c,i)=>{
+      const p=getPalier(c.scans);
+      const pct=Math.min(100,Math.round((c.scans/getNext(c.scans))*100));
+      return `<div class="rank-row">
+        <div class="rnum">${i+1}</div>
+        <div><div class="rname">${c.name}</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${p.color}"></div></div>
+        </div>
+        <div class="rval">${c.scans}</div>
+        <div style="text-align:center"><span class="pill ${p.cls}" style="font-size:10px">${p.label}</span></div>
+      </div>`;
+    }).join(''):
+    '<div class="empty">Ajoute des commerciaux dans l\'onglet Équipe</div>';
+  document.getElementById('dash-log').innerHTML=state.scanLog.length?
+    state.scanLog.slice(0,8).map(s=>`<div class="log-item"><div class="log-dot"></div><div class="log-name">${s.name}</div><div class="log-time">${s.time}</div></div>`).join(''):
+    '<div class="empty">Aucun scan pour l\'instant</div>';
+}
+
+function renderCommerciaux(){
+  document.getElementById('team-count').textContent=state.commerciaux.length;
+  const el=document.getElementById('commercial-list');
+  if(!state.commerciaux.length){el.innerHTML='<div class="empty">Aucun commercial ajouté</div>';return;}
+  el.innerHTML=state.commerciaux.map(c=>{
+    const p=getPalier(c.scans);
+    const pct=Math.min(100,Math.round((c.scans/getNext(c.scans))*100));
+    return `<div class="commercial-item">
+      <div class="ci-top">
+        <div><div class="ci-name">${c.name}</div><div class="ci-zone">${c.zone}</div></div>
+        <span class="pill ${p.cls}">${p.label}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-size:22px;font-weight:700">${c.scans}</div>
+        <div style="flex:1"><div class="progress-bar" style="margin-top:0"><div class="progress-fill" style="width:${pct}%;background:${p.color}"></div></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px">${c.scans} / ${getNext(c.scans)} scans</div></div>
+      </div>
+      <div class="ci-actions">
+        <button class="btn btn-sm" onclick="addScan('${c.id}')">+ 1 scan manuel</button>
+        <button class="btn btn-sm btn-danger" onclick="removeCommercial('${c.id}')">Supprimer</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function addCommercial(){
+  const name=document.getElementById('new-name').value.trim();
+  const zone=document.getElementById('new-zone').value.trim();
+  if(!name)return;
+  const id=name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+  if(state.commerciaux.find(c=>c.id===id)){alert('Ce commercial existe déjà');return;}
+  state.commerciaux.push({id,name,zone:zone||'Non définie',scans:0});
+  document.getElementById('new-name').value='';
+  document.getElementById('new-zone').value='';
+  save();renderCommerciaux();
+}
+
+function removeCommercial(id){
+  if(!confirm('Supprimer ce commercial ?'))return;
+  state.commerciaux=state.commerciaux.filter(c=>c.id!==id);
+  save();renderCommerciaux();
+}
+
+function addScan(id){
+  const c=state.commerciaux.find(x=>x.id===id);
+  if(!c)return;
+  c.scans++;
+  const now=new Date();
+  state.scanLog.unshift({name:c.name,time:'Maintenant '+now.getHours()+':'+String(now.getMinutes()).padStart(2,'0')});
+  if(state.scanLog.length>50)state.scanLog.pop();
+  save();renderCommerciaux();
+}
+
+function renderQR(){
+  const el=document.getElementById('qr-list');
+  el.innerHTML='';
+  if(!state.commerciaux.length){el.innerHTML='<div class="empty">Ajoute des commerciaux d\'abord dans l\'onglet Équipe</div>';return;}
+  if(!state.googleUrl){el.innerHTML='<div class="alert">Configure d\'abord ton lien Google dans l\'onglet Config</div>';return;}
+  state.commerciaux.forEach(c=>{
+    const url=window.location.origin+'/track?ref='+c.id+'&to='+encodeURIComponent(state.googleUrl);
+    const div=document.createElement('div');
+    div.className='commercial-item';
+    div.innerHTML=`
+      <div class="ci-top" style="margin-bottom:8px">
+        <div><div class="ci-name">${c.name}</div><div class="ci-zone">${c.zone} · ${c.scans} scans</div></div>
+      </div>
+      <div class="qr-wrap">
+        <div id="qr-${c.id}"></div>
+        <div class="qr-info">
+          <div class="qr-url">Lien unique pour ${c.name.split(' ')[0]}</div>
+          <div style="font-size:11px;color:var(--blue-txt);margin-bottom:8px">Redirige vers Google</div>
+          <button class="btn btn-sm" onclick="printCard('${c.id}','${c.name}','${c.zone}')">Imprimer la carte</button>
+        </div>
+      </div>`;
+    el.appendChild(div);
+    setTimeout(()=>{
+      try{new QRCode(document.getElementById('qr-'+c.id),{text:url,width:80,height:80,colorDark:'#1A1A18',colorLight:'#ffffff'});}catch(e){}
+    },150);
+  });
+}
+
+function printCard(id,name,zone){
+  const canvas=document.querySelector('#qr-'+id+' canvas');
+  if(!canvas){alert('QR code non prêt, réessaie dans 2 secondes');return;}
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>QR ${name}</title>
+  <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#f5f5f0}
+  .card{background:#fff;border-radius:16px;padding:28px 24px;text-align:center;width:260px;border:1px solid #e5e3dc}
+  .brand{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#7A7870;margin-bottom:16px}
+  .title{font-size:20px;font-weight:700;letter-spacing:-0.5px;margin-bottom:4px}
+  .sub{font-size:13px;color:#7A7870;margin-bottom:20px}
+  img{border-radius:8px}
+  .name{font-size:14px;font-weight:600;margin-top:16px}
+  .zone{font-size:11px;color:#7A7870;margin-top:2px}
+  .footer{font-size:10px;color:#B4B2A9;margin-top:16px;line-height:1.5}
+  </style></head><body>
+  <div class="card">
+    <div class="brand">Eurocash Confiseur</div>
+    <div class="title">Votre avis compte !</div>
+    <div class="sub">Scannez pour nous laisser un avis Google</div>
+    <img src="${canvas.toDataURL()}" width="160" height="160"/>
+    <div class="name">${name}</div>
+    <div class="zone">${zone}</div>
+    <div class="footer">Merci pour votre confiance.<br/>Cela ne prend que 2 minutes.</div>
+  </div>
+  <script>window.onload=()=>window.print()<\/script></body></html>`);
+  w.document.close();
+}
+
+function renderConfig(){
+  document.getElementById('google-url').value=state.googleUrl||'';
+}
+
+function saveConfig(){
+  state.googleUrl=document.getElementById('google-url').value.trim();
+  save();
+  const msg=document.getElementById('success-config');
+  msg.style.display='block';
+  setTimeout(()=>msg.style.display='none',3000);
+}
+
+showPage('dashboard');
+</script>
+</body>
+</html>
